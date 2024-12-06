@@ -1,3 +1,22 @@
 spring:
   application:
     name: ShortLinkService
+    setting:
+      base-host: http://localhost:8080/
+      max-compress-attempt: 3
+  datasource:
+    url: jdbc:postgresql://localhost:5432/linkdb
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+
+
+
+

@@ -1,4 +1,6 @@
 package org.pogonin.shortlinkservice.api.dto.out;
 
-public class LinkStatisticResponse {
+public interface LinkStatisticResponse {
+    Integer getRank();
+    Long getNumberOfUses();
 }
