@@ -20,4 +20,11 @@
             <column name="usage_limit" type="int"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="06122024-add-ttl-and-expiration-fields" author="Alexey">
+        <addColumn tableName="link">
+            <column name="ttl" type="BIGINT" remarks="Время жизни (Time To Live)"/>
+            <column name="rolling_expiration" type="BOOLEAN" remarks="Флаг вычисления срока действия от последнего доступа"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

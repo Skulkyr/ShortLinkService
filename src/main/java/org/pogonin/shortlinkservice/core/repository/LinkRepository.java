@@ -5,10 +5,9 @@ import org.pogonin.shortlinkservice.core.entity.Link;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -30,8 +29,7 @@ public interface LinkRepository extends JpaRepository<Link, String> {
 
     boolean existsByOriginalLink(String originalLink);
 
-
     @Modifying
-    @Query("update Link l set l.numberOfUses = l.numberOfUses + 1 where l.shortLink = ?1")
-    void updateNumberOfUsesByShortLink(@NonNull String shortLink);
+    @Query("DELETE FROM Link l WHERE l.expirationTime IS NOT NULL AND l.expirationTime < :currentTime")
+    int deleteAllExpired(LocalDateTime currentTime);
 }

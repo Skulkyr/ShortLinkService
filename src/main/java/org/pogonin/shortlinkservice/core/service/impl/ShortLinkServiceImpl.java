@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 @Service
 public class ShortLinkServiceImpl implements ShortLinkService {
     private final int MAX_ATTEMPT;
@@ -34,9 +37,11 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     @Override
     @Transactional()
     public String getOriginalLink(String shortLink) {
-        String originalLink = linkRepository.findByShortLink(shortLink).orElseThrow(
-                () -> new LinkNotFoundException(shortLink)).getOriginalLink();
-        return originalLink;
+        Link link = linkRepository.findByShortLink(shortLink).orElseThrow(
+                () -> new LinkNotFoundException(shortLink));
+        if (link.getUsageLimit() != null && link.getUsageLimit() <= link.getNumberOfUses())
+            linkRepository.delete(link);
+        return link.getOriginalLink();
     }
 
     @Override
@@ -47,6 +52,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
         Link link = new Link();
         link.setOriginalLink(linkRequest.getLink());
         link.setNumberOfUses(0L);
+        fillLinkExpiration(linkRequest, link);
 
         if (tryGenerateShortLink(linkRequest, link))
             return saveAndReturnShortLink(link);
@@ -54,12 +60,14 @@ public class ShortLinkServiceImpl implements ShortLinkService {
         throw new LinkGenerateException("Unable to generate unique link", linkRequest);
     }
 
+
     @Override
     @Transactional
     public String changeShortLink(LinkRequest linkRequest) {
         String originalLink = linkRequest.getLink();
         Link link = linkRepository.findById(originalLink).orElseThrow(
                 () -> new LinkNotFoundException(originalLink));
+        fillLinkExpiration(linkRequest, link);
 
         if (tryGenerateShortLink(linkRequest, link))
             return saveAndReturnShortLink(link);
@@ -104,6 +112,14 @@ public class ShortLinkServiceImpl implements ShortLinkService {
             String shortLink = linkRepository.findById(linkRequest.getLink()).get().getShortLink();
             throw new LinkAlreadyExistException("Link already exist", shortLink);
         }
+    }
+
+    private void fillLinkExpiration(LinkRequest linkRequest, Link link) {
+        Duration ttl = linkRequest.getTtl();
+        link.setTtl(ttl);
+        link.setUsageLimit(linkRequest.getUsageLimit());
+        link.setExpirationTime(ttl == null ? null : LocalDateTime.now().plus(ttl));
+        link.setRollingExpiration(linkRequest.getRollingExpiration());
     }
 
     private String saveAndReturnShortLink(Link link) {

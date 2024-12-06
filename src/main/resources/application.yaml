@@ -4,6 +4,7 @@ spring:
     setting:
       base-host: http://localhost:8080/
       max-compress-attempt: 3
+      cron-clean-up: 0 * * * * *
   datasource:
     url: jdbc:postgresql://localhost:5432/linkdb
     username: postgres

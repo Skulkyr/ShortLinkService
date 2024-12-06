@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -40,11 +41,17 @@ public class Link {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Duration ttl;
+
+    @Column(nullable = false)
+    private Boolean rollingExpiration;
+
     @PostLoad
     private void postLoad() {
         lastAccess = LocalDateTime.now();
         numberOfUses++;
-        if (usageLimit != null)
-            usageLimit--;
+        if (rollingExpiration && expirationTime != null)
+            expirationTime = lastAccess.plus(ttl);
     }
 }
