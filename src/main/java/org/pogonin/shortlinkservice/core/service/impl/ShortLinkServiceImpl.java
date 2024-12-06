@@ -60,7 +60,6 @@ public class ShortLinkServiceImpl implements ShortLinkService {
         throw new LinkGenerateException("Unable to generate unique link", linkRequest);
     }
 
-
     @Override
     @Transactional
     public String changeShortLink(LinkRequest linkRequest) {
