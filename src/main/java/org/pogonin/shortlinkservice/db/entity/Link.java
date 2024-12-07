@@ -1,4 +1,4 @@
-package org.pogonin.shortlinkservice.core.entity;
+package org.pogonin.shortlinkservice.db.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,7 +1,7 @@
-package org.pogonin.shortlinkservice.core.repository;
+package org.pogonin.shortlinkservice.db.repository;
 
 import org.pogonin.shortlinkservice.api.dto.out.LinkStatisticResponse;
-import org.pogonin.shortlinkservice.core.entity.Link;
+import org.pogonin.shortlinkservice.db.entity.Link;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,7 +23,7 @@ public interface LinkRepository extends JpaRepository<Link, String> {
             from Link main
             where main.shortLink = ?1
             """)
-    Optional<LinkStatisticResponse> getStatisticByLink(String shortLink);
+    Optional<LinkStatisticResponse> findStatisticByLink(String shortLink);
 
     boolean existsByShortLink(String shortLink);
 

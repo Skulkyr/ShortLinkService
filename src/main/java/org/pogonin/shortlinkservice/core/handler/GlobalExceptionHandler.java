@@ -1,5 +1,6 @@
-package org.pogonin.shortlinkservice.api.handler;
+package org.pogonin.shortlinkservice.core.handler;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.pogonin.shortlinkservice.core.exception.AliasAlreadyExistException;
@@ -38,7 +39,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleLinkNotFoundException(LinkNotFoundException e) {
         log.info(e.getMessage());
         return new ResponseEntity<>(
-                new ErrorResponse(404, "Указанный адрес не существует"),
+                new ErrorResponse(404, "Ссылка с указанным идентификатором не найдена."),
                 HttpStatus.NOT_FOUND);
     }
 
@@ -76,6 +77,7 @@ public class GlobalExceptionHandler {
     }
 
     @Getter
+    @Schema(name = "Сообщение об ошибке")
     public static class ErrorResponse {
         private final LocalDateTime timestamp;
         private final int statusCode;

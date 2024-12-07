@@ -1,11 +1,11 @@
-package org.pogonin.shortlinkservice.core.repository;
+package org.pogonin.shortlinkservice.db.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.pogonin.shortlinkservice.api.dto.out.LinkStatisticResponse;
-import org.pogonin.shortlinkservice.core.entity.Link;
+import org.pogonin.shortlinkservice.db.entity.Link;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -99,7 +99,7 @@ class LinkRepositoryTest {
     @Test
 
     @DisplayName("Получение статистики по shortLink")
-    void testGetStatisticByLink() {
+    void testFindStatisticByLink() {
         Link link1 = createLink("https://original1.com", "short1", 10L,
                 null, null, false);
         Link link2 = createLink("https://original2.com", "short2", 20L,
@@ -113,7 +113,7 @@ class LinkRepositoryTest {
 
         entityManager.flush();
         entityManager.clear();
-        Optional<LinkStatisticResponse> statsOpt = linkRepository.getStatisticByLink("short1");
+        Optional<LinkStatisticResponse> statsOpt = linkRepository.findStatisticByLink("short1");
 
 
         assertThat(statsOpt).isPresent();

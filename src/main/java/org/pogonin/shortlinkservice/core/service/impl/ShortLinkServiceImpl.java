@@ -2,12 +2,12 @@ package org.pogonin.shortlinkservice.core.service.impl;
 
 import org.pogonin.shortlinkservice.api.dto.in.LinkRequest;
 import org.pogonin.shortlinkservice.api.dto.out.LinkStatisticResponse;
-import org.pogonin.shortlinkservice.core.entity.Link;
+import org.pogonin.shortlinkservice.db.entity.Link;
 import org.pogonin.shortlinkservice.core.exception.AliasAlreadyExistException;
 import org.pogonin.shortlinkservice.core.exception.LinkAlreadyExistException;
 import org.pogonin.shortlinkservice.core.exception.LinkGenerateException;
 import org.pogonin.shortlinkservice.core.exception.LinkNotFoundException;
-import org.pogonin.shortlinkservice.core.repository.LinkRepository;
+import org.pogonin.shortlinkservice.db.repository.LinkRepository;
 import org.pogonin.shortlinkservice.core.service.ShortLinkService;
 import org.pogonin.shortlinkservice.core.utils.CompressUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,7 +77,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     @Override
     @Transactional(readOnly = true)
     public LinkStatisticResponse getLinkStatistic(String shortLink) {
-        return linkRepository.getStatisticByLink(shortLink).orElseThrow(() -> new LinkNotFoundException(shortLink));
+        return linkRepository.findStatisticByLink(shortLink).orElseThrow(() -> new LinkNotFoundException(shortLink));
     }
 
     private boolean tryCompress(LinkRequest linkRequest, Link link) {
