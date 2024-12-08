@@ -64,7 +64,7 @@ public class ShortLinkServiceImpl implements ShortLinkService {
     @Transactional
     public String changeShortLink(LinkRequest linkRequest) {
         String originalLink = linkRequest.getLink();
-        Link link = linkRepository.findById(originalLink).orElseThrow(
+        Link link = linkRepository.findByOriginalLink(originalLink).orElseThrow(
                 () -> new LinkNotFoundException(originalLink));
         fillLinkExpiration(linkRequest, link);
 

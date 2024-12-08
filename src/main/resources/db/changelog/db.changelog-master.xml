@@ -9,5 +9,6 @@
 
     <include file="db/changelog/version/0/1/v0.1-init-db.xml"/>
     <include file="db/changelog/version/0/2/v0.2-add-ttl.xml"/>
+    <include file="db/changelog/version/0/3/v0.3-setting-vacuum-param.xml"/>
 
 </databaseChangeLog>
